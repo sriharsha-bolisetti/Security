@@ -72,3 +72,35 @@ Access Control and Authorizations
 - Capability-based access control uses special tokens or keys known as `capabilities` to access an API.
 - The capability itself says what operations the `bearer` can perform rather than who the user is.
 - A capability both names a resource and describes the permissions on it, so a user is not able to access any resource that they do not have a capability for.
+
+ #### Case Study - Natter API
+ - Natter API is split into two REST endpoints, one for normal users and one for moderators who have special privileges to tackle abusive behavior.
+ - POST /spaces -> returns `space id`
+ - POST /spaces/<spaceid>/messages 
+ - GET /spaces/<spaceid>/messages. -> to return messages in a space. A `since=<timestamp>` query parameter can be used to limit the messges returned to a recent period.
+ - Moderator API contains a single operation to delete a message by sending a `DELETE` request to the message URI.
+ - An injection attack can occur anywhere that you execute dynamic code in response to user input, such as SQL and LDAP queries, and when running operating system commands.
+ - An Injection Attack occurs when unvalidated user input is included directly in a dynamic command or query that is executed by the application, allowing an attacker to control the code that is executed.
+ - Best approach to prevent injection atacks is to ensure that user input is always clearly separated from dynamic code by using APIs that support `prepared statements`.
+ - A prepared statement allows you to write the command or query that you want to execute with placeholders in it for user input. You then separately pass the user input values and the database API ensures they are never treated as statements to be executed.
+ - Database user didn't need to have permissions to delete tables in the first place.
+ - Buffer Overflow attack.
+ - Remote code execution occurs when an attacker can inject code into a remotely running API and cause it to execute. This can allow the attacker to perform actions that would not normally be allowed.
+ - Insecure Deserialization
+ - ReDos Attacks
+ - Cross Site Scripting
+ - Single Origin Policy -> Scripts executing within the same origin (or same site) as a web page are, by default, able to read cookies set by that website, examine HTML elements created by that site, make network requests to that site, and so on, although scripts from other origins are blocked from doing those things.
+ - A successful XSS allows an attacker to execute their script as if it came from the target origin, so the malicious script gets to do all the same things that the genuine scripts from that origin can do. 
+ - If I can successfully exploit an XSS vulnerability on facebook.com, for example, my script could potentially read and alter your Facebook posts or steal your private messages.
+ - Although XSS is primarily a vulnerability in web applications, in the age of single page apps, it's a common for web browser clients to talk directly to an API. 
+ - For this reason it's essential that an API take basic precautions to avoid producing output that might be interpreted as a script when processed by a web browser.
+ - `X-XSS-Protection` header is usually used to ensure browser protections are turned on.
+ - How to prevent XSS?
+ 1. Be string in what you accept.
+ 2. Ensure all outputs are well-formed using a proper json library rather than by concatenating strings.
+ 3. Produce correct Content_type headers on all your API's reponses, and never assume the defualts are sensible.
+ 4. If you parse the Accept header to decide wht kind of output to produce, never simply copy the value of that header into the response. Always explicitly specify the `Content-Type` that your API has produced.
+ - `X-Content-Type-Options` -> `Set to nosniff to prevent the browser guessing the correct Content-Type.`
+ - `X-Frame-Options` -> `Set to DENY to prevent your API responses being loaded in a frame or iframe.`
+ - `Cache-Control` and `Expires`
+ 
